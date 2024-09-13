@@ -19,6 +19,7 @@ class WidgetbookState extends ChangeNotifier {
     this.path,
     this.query,
     this.previewMode = false,
+    this.isNavigationBarVisible = true,
     this.queryParams = const {},
     this.appBuilder = widgetsAppBuilder,
     this.addons,
@@ -41,6 +42,7 @@ class WidgetbookState extends ChangeNotifier {
   String? path;
   String? query;
   bool previewMode;
+  bool isNavigationBarVisible;
   Map<String, String> queryParams;
 
   late final KnobsRegistry knobs;
@@ -135,6 +137,12 @@ class WidgetbookState extends ChangeNotifier {
       group,
       FieldCodec.encodeQueryGroup(newGroupMap),
     );
+  }
+
+  /// Toggle NavigationBar visibility
+  void toggleNavigationBarVisibility() {
+    isNavigationBarVisible = !isNavigationBarVisible;
+    notifyListeners();
   }
 
   /// Update the [path], causing a new [useCase] to bet returned.
