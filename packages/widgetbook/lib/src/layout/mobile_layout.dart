@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../settings/settings.dart';
 import '../state/state.dart';
+import '../utils/multi_touch_gesture_recognizer.dart';
 import 'base_layout.dart';
 
 class MobileLayout extends StatelessWidget implements BaseLayout {
-  const MobileLayout({
+  MobileLayout({
     super.key,
     required this.navigationBuilder,
     required this.addonsBuilder,
@@ -27,11 +28,22 @@ class MobileLayout extends StatelessWidget implements BaseLayout {
     return Scaffold(
       key: ValueKey(state.isNext), // Rebuild when switching to next
       body: SafeArea(
-        child: GestureDetector(
-          onLongPress: () {
-            WidgetbookState.of(context).toggleNavigationBarVisibility();
+        child: RawGestureDetector(
+          gestures: {
+            MultiTouchGestureRecognizer: GestureRecognizerFactoryWithHandlers<
+                MultiTouchGestureRecognizer>(
+              () => MultiTouchGestureRecognizer(),
+              (instance) {
+                instance.minNumberOfTouches = 2;
+                instance.onMultiTap = (correctNumberOfTouches) {
+                  if (correctNumberOfTouches) {
+                    WidgetbookState.of(context).toggleNavigationBarVisibility();
+                  }
+                };
+              },
+            ),
           },
-            child: workbench,
+          child: workbench,
         ),
       ),
       bottomNavigationBar: ExcludeSemantics(
