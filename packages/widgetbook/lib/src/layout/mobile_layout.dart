@@ -27,24 +27,22 @@ class MobileLayout extends StatelessWidget implements BaseLayout {
 
     return Scaffold(
       key: ValueKey(state.isNext), // Rebuild when switching to next
-      body: SafeArea(
-        child: RawGestureDetector(
-          gestures: {
-            MultiTouchGestureRecognizer: GestureRecognizerFactoryWithHandlers<
-                MultiTouchGestureRecognizer>(
-              () => MultiTouchGestureRecognizer(),
-              (instance) {
-                instance.minNumberOfTouches = 2;
-                instance.onMultiTap = (correctNumberOfTouches) {
-                  if (correctNumberOfTouches) {
-                    WidgetbookState.of(context).toggleNavigationBarVisibility();
-                  }
-                };
-              },
-            ),
-          },
-          child: workbench,
-        ),
+      body: RawGestureDetector(
+        gestures: {
+          MultiTouchGestureRecognizer: GestureRecognizerFactoryWithHandlers<
+              MultiTouchGestureRecognizer>(
+            () => MultiTouchGestureRecognizer(),
+            (instance) {
+              instance.minNumberOfTouches = 2;
+              instance.onMultiTap = (correctNumberOfTouches) {
+                if (correctNumberOfTouches) {
+                  WidgetbookState.of(context).toggleNavigationBarVisibility();
+                }
+              };
+            },
+          ),
+        },
+        child: workbench,
       ),
       bottomNavigationBar: ExcludeSemantics(
         child: Visibility(
