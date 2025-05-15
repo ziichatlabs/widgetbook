@@ -51,6 +51,18 @@ class WidgetbookState extends ChangeNotifier {
   final List<WidgetbookIntegration>? integrations;
   final WidgetbookRoot root;
 
+
+  bool _isFullLayoutVisible = true;
+
+
+  bool get isFullLayoutVisible => _isFullLayoutVisible;
+
+  void toggleFullLayoutVisibility() {
+    _isFullLayoutVisible = !_isFullLayoutVisible;
+    notifyListeners();
+  }
+
+
   List<WidgetbookNode> get directories => root.children!;
 
   WidgetbookUseCase? get useCase => path == null ? null : root.table[path!];

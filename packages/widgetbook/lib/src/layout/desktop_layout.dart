@@ -25,46 +25,62 @@ class DesktopLayout extends StatelessWidget implements BaseLayout {
   Widget build(BuildContext context) {
     final state = WidgetbookState.of(context);
 
-    return ColoredBox(
-      key: ValueKey(state.isNext), // Rebuild when switching to next
-      color: Theme.of(context).colorScheme.surface,
-      child: ResizableWidget(
-        separatorSize: 2,
-        percentages: [0.2, 0.6, 0.2],
-        separatorColor: Colors.white24,
-        children: [
-          ExcludeSemantics(
-            child: Card(
-              child: navigationBuilder(context),
-            ),
-          ),
-          workbench,
-          ExcludeSemantics(
-            child: Card(
-              child: SettingsPanel(
-                settings: [
-                  if (state.addons != null) ...{
-                    SettingsPanelData(
-                      name: 'Addons',
-                      builder: addonsBuilder,
-                    ),
-                  },
-                  if (state.isNext) ...{
-                    SettingsPanelData(
-                      name: 'Args',
-                      builder: argsBuilder,
-                    ),
-                  } else ...{
-                    SettingsPanelData(
-                      name: 'Knobs',
-                      builder: knobsBuilder,
-                    ),
-                  },
-                ],
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          state.toggleFullLayoutVisibility();
+        },
+        tooltip: state.isFullLayoutVisible ? 'Hide Layout' : 'Show Layout',
+        child: Icon(
+          state.isFullLayoutVisible ? Icons.close_fullscreen : Icons.open_in_full,
+        ),
+      ),
+      body: ColoredBox(
+        key: ValueKey(state.isNext),
+        color: Theme.of(context).colorScheme.surface,
+        child: state.isFullLayoutVisible
+            ? ResizableWidget(
+          separatorSize: 2,
+          percentages: [0.2, 0.6, 0.2],
+          separatorColor: Colors.white24,
+          children: [
+            // Navigation Panel
+            ExcludeSemantics(
+              child: Card(
+                child: navigationBuilder(context),
               ),
             ),
-          ),
-        ],
+            // Workbench
+            workbench,
+            // Settings Panel
+            ExcludeSemantics(
+              child: Card(
+                child: SettingsPanel(
+                  settings: [
+                    if (state.addons != null) ...{
+                      SettingsPanelData(
+                        name: 'Addons',
+                        builder: addonsBuilder,
+                      ),
+                    },
+                    if (state.isNext) ...{
+                      SettingsPanelData(
+                        name: 'Args',
+                        builder: argsBuilder,
+                      ),
+                    } else ...{
+                      SettingsPanelData(
+                        name: 'Knobs',
+                        builder: knobsBuilder,
+                      ),
+                    },
+                  ],
+                ),
+              ),
+            ),
+          ],
+        )
+            : workbench, // Chỉ hiển thị workbench khi tắt full layout
       ),
     );
   }
