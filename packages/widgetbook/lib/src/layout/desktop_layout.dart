@@ -35,6 +35,10 @@ class DesktopLayout extends StatelessWidget implements BaseLayout {
           state.isFullLayoutVisible ? Icons.close_fullscreen : Icons.open_in_full,
         ),
       ),
+      floatingActionButtonLocation: CustomFloatingActionButtonLocation(
+        FloatingActionButtonLocation.endFloat,
+        offset: Offset(0, -80), // Offset bottom 80px
+      ),
       body: ColoredBox(
         key: ValueKey(state.isNext),
         color: Theme.of(context).colorScheme.surface,
@@ -83,5 +87,18 @@ class DesktopLayout extends StatelessWidget implements BaseLayout {
             : workbench, // Chỉ hiển thị workbench khi tắt full layout
       ),
     );
+  }
+}
+
+class CustomFloatingActionButtonLocation extends FloatingActionButtonLocation {
+  final FloatingActionButtonLocation baseLocation;
+  final Offset offset;
+
+  CustomFloatingActionButtonLocation(this.baseLocation, {required this.offset});
+
+  @override
+  Offset getOffset(ScaffoldPrelayoutGeometry scaffoldGeometry) {
+    final baseOffset = baseLocation.getOffset(scaffoldGeometry);
+    return baseOffset + offset;
   }
 }
